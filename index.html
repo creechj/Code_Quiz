@@ -5,9 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
-    <title>Document</title>
+    <title>Code Quiz</title>
 </head>
 <body>
+    <button id="start" data-style="visible">Start</button>
+    <div id="question" data-state="hidden"></div>
+    <ol id="choices" data-state="hidden"></ol>
+    <div id="result" data-state="hidden"></div>
+    <form>
+        <input id="initials" type="text" data-state="hidden"></input>
+        <button type="submit" method="POST" data-state="hidden">Submit</button>
+    </form>
+    <ol id="score" data-state="hidden"></ol>
     <script src="assets/js/script.js">
     </script>
 </body>
