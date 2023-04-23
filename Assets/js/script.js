@@ -25,14 +25,48 @@ var questions = [
     "Question2",
     "Question3",
     "Question4",
+    "Question5",
+    "Question6",
+    "Question7",
+    "Question8",
+    "Question9",
+    "Question10",
+    "Question11",
+    "Question12",
+    "Question13",
+    "Question14",
+    "Question15",
+    "Question16",
+    "Question17",
+    "Question18",
+    "Question19",
+    "Question20",
 ];
+
 // array with correct answers to corresponding questions
 var answers = [
     "AnswertoQ1",
     "AnswertoQ2",
     "AnswertoQ3",
     "AnswertoQ4",
+    "AnswertoQ5",
+    "AnswertoQ6",
+    "AnswertoQ7",
+    "AnswertoQ8",
+    "AnswertoQ9",
+    "AnswertoQ10",
+    "AnswertoQ11",
+    "AnswertoQ12",
+    "AnswertoQ13",
+    "AnswertoQ14",
+    "AnswertoQ15",
+    "AnswertoQ16",
+    "AnswertoQ17",
+    "AnswertoQ18",
+    "AnswertoQ19",
+    "AnswertoQ20",
 ];
+
 // array with filler answers
 var falseAnswers = [
     "FalseAnswer1",
@@ -59,6 +93,7 @@ var initializePage = function() {
 }
 
 //call initialze function here 
+initializePage()
 
 // function to check if correct answer was selected, increment score or decrement time, display message, increment question
 var checkResponse = function(btnClicked){
@@ -70,13 +105,14 @@ var checkResponse = function(btnClicked){
         // deduct time from clock
     }
     
-    choices.replaceChildren()
+    // INSERT IF TO END GAME HERE
 
+    choices.replaceChildren()
+    result.innerHTML = ""
     qnumber++
     questionGenerator(qnumber)
     console.log(qnumber);
     console.log(`Score: ${currentScore}`);
-
 }
 
 // selects question by index and displays options
@@ -84,33 +120,39 @@ var questionGenerator = function(qnumber){
     
     // selects and displays question by number
     question.textContent = questions[qnumber];
-    result.innerHTML = ""
-    // assigns 1 false answer to a variable and then removes that answer as an option to be selected for the next variable
-    var falseAnswer1 = falseAnswers[Math.floor(Math.random()*falseAnswers.length)];
-    var falseAnswers1 = falseAnswers;
-    falseAnswers1.splice(falseAnswers1.indexOf(falseAnswer1), 1);
-    var falseAnswer2 = falseAnswers1[Math.floor(Math.random()*falseAnswers1.length)];
-    var falseAnswers2 = falseAnswers1;
-    falseAnswers2.splice(falseAnswers2.indexOf(falseAnswer2), 1);
-    var falseAnswer3 = falseAnswers2[Math.floor(Math.random()*falseAnswers2.length)];
+
+    // randomly assigns false answers to variables; reruns if selections match
+    var falseAnswer1
+    var falseAnswer2
+    var falseAnswer3
+
+    var falseChooser = function(){
+        falseAnswer1 = falseAnswers[Math.floor(Math.random()*falseAnswers.length)];
+        falseAnswer2 = falseAnswers[Math.floor(Math.random()*falseAnswers.length)];
+        falseAnswer3 = falseAnswers[Math.floor(Math.random()*falseAnswers.length)];
+        if (falseAnswer1 == falseAnswer2 || falseAnswer1 == falseAnswer3 || falseAnswer2 == falseAnswer3) {
+            falseChooser();
+        };
+    }
+    falseChooser()
 
     // array with stored answers for assignment to li's as options
-    var randAnswers = [answers[qnumber],
-    falseAnswer1, falseAnswer2, falseAnswer3];
-    
+    var randAnswers = [answers[qnumber], falseAnswer1, falseAnswer2, falseAnswer3];
+
     // loop to create li buttons for responses and assign answers
     for (i = 0; i < 4; i++) {
         var option = document.createElement("li");
         var optionBtn = document.createElement("button");
         option.appendChild(optionBtn);
         choices.appendChild(option);
+
         // assigns correct answer to 1 li and 3 false answers to others
         var randAnswer = Math.floor(Math.random() * randAnswers.length)
         optionBtn.textContent = randAnswers[randAnswer];
-        optionBtn.setAttribute("id", `option${i}`);
-        option.setAttribute("class", "optionLis");
         randAnswers.splice(randAnswer, 1);
+        optionBtn.setAttribute("id", `option${i}`);
     };
+
     // add event listeners for 4 buttons. compare button id to index of correct answer in answers array via checkResponse function
     var option1 = document.getElementById("option0")
     option1.addEventListener("click", function(){
