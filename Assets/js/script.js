@@ -58,12 +58,33 @@ var initializePage = function() {
     submit.setAttribute("data-state", "hidden");
 }
 
+//call initialze function here 
+
+// function to check if correct answer was selected, increment score or decrement time, display message, increment question
+var checkResponse = function(btnClicked){
+    if (btnClicked == qnumber) {
+        result.innerHTML = "Correct!";
+        currentScore++;
+    } else {
+        result.innerHTML = "Wrong Answer";
+        // deduct time from clock
+    }
+    
+    choices.replaceChildren()
+
+    qnumber++
+    questionGenerator(qnumber)
+    console.log(qnumber);
+    console.log(`Score: ${currentScore}`);
+
+}
+
 // selects question by index and displays options
 var questionGenerator = function(qnumber){
     
     // selects and displays question by number
     question.textContent = questions[qnumber];
-    score.innerHTML = ""
+    result.innerHTML = ""
     // assigns 1 false answer to a variable and then removes that answer as an option to be selected for the next variable
     var falseAnswer1 = falseAnswers[Math.floor(Math.random()*falseAnswers.length)];
     var falseAnswers1 = falseAnswers;
@@ -87,30 +108,40 @@ var questionGenerator = function(qnumber){
         var randAnswer = Math.floor(Math.random() * randAnswers.length)
         optionBtn.textContent = randAnswers[randAnswer];
         optionBtn.setAttribute("id", `option${i}`);
+        option.setAttribute("class", "optionLis");
         randAnswers.splice(randAnswer, 1);
     };
+    // add event listeners for 4 buttons. compare button id to index of correct answer in answers array via checkResponse function
+    var option1 = document.getElementById("option0")
+    option1.addEventListener("click", function(){
+        var btnClicked = answers.indexOf(option1.textContent);
+        checkResponse(btnClicked)
+    })
+    var option2 = document.getElementById("option1")
+    option2.addEventListener("click", function(){
+        var btnClicked = answers.indexOf(option2.textContent);
+        checkResponse(btnClicked)
+    })
+    var option3 = document.getElementById("option2")
+    option3.addEventListener("click", function(){
+        var btnClicked = answers.indexOf(option3.textContent);
+        checkResponse(btnClicked)
+    })
+    var option4 = document.getElementById("option3")
+    option4.addEventListener("click", function(){
+        var btnClicked = answers.indexOf(option4.textContent);
+        checkResponse(btnClicked)
+    })
 };
-
-// function to check if correct answer was selected, increment score or decrement time, display message, increment question
-var checkResponse = function(btnClicked){
-    if (btnClicked == qnumber) {
-        score.innerHTML = "Correct!";
-        currentScore++;
-        console.log(`Score: ${currentScore}`)
-    } else {
-        score.innerHTML = "Wrong Answer";
-        // deduct time from clock
-    }
-}
 
 // event listener for start button - hides/reveals quiz elements; resets score and question number
 start.addEventListener("click", function(){
-    currentScore = 0
-    qnumber = 0
-    questionGenerator(qnumber)
     start.setAttribute("data-state", "hidden");
     question.setAttribute("data-state", "visible");
     choices.setAttribute("data-state", "visible");
     result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "hidden");
+    currentScore = 0
+    qnumber = 0
+    questionGenerator(qnumber)
 })
