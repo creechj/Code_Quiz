@@ -128,12 +128,12 @@ var endGame = function(){
     } else if (currentScore > topScores[2]) {
         localStorage.setItem("topScore3", currentScore)
     }
-    // store topScore array and initials in local storage
 
     // get topScores and initials from local storage and display in ol 
     topScoreslot1.textContent = `${topInitials[0]}: ${localStorage.getItem("topScore1")}`
     topScoreslot2.textContent = `${topInitials[1]}: ${localStorage.getItem("topScore2")}`
     topScoreslot3.textContent = `${topInitials[2]}: ${localStorage.getItem("topScore3")}`
+
     start.setAttribute("data-state", "visible")
     question.innerHTML = "Start Again?"
 }
@@ -240,6 +240,15 @@ start.addEventListener("click", function(){
     currentScore = 0
     qnumber = 0
     result.innerHTML = ""
+    if (localStorage.getItem("topScore1") == null) {
+        localStorage.setItem("topScore1", 0)
+    }
+    if (localStorage.getItem("topScore2") == null) {
+        localStorage.setItem("topScore2", 0)
+    }
+    if (localStorage.getItem("topScore3") == null) {
+        localStorage.setItem("topScore3", 0)
+    }
     questionGenerator(qnumber)
     // add call for interval function
 })
