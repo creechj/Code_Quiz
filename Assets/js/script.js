@@ -15,8 +15,14 @@ var result = document.querySelector("#result");
 var score = document.querySelector("#score");
 var initials = document.querySelector("#initials");
 var submit = document.querySelector("#submit");
+var timer = document.querySelector("#timer");
+var timerSpan = document.querySelector("#timerSpan");
+var topScoreslot1 = document.querySelector("#topScore1");
+var topScoreslot2 = document.querySelector("#topScore2");
+var topScoreslot3 = document.querySelector("#topScore3");
 
 var currentScore
+var currentInitials
 var qnumber
 
 // array with questions to cycle through
@@ -81,7 +87,7 @@ var falseAnswers = [
     "FalseAnswer10",
 ];
 
-// sets load state of page. also used for reset
+// sets load state of page
 var initializePage = function() {
     start.setAttribute("data-state", "visible");
     question.setAttribute("data-state", "hidden");
@@ -90,30 +96,77 @@ var initializePage = function() {
     score.setAttribute("data-state", "visible");
     initials.setAttribute("data-state", "hidden");
     submit.setAttribute("data-state", "hidden");
+    timer.setAttribute("data-state", "hidden");
 }
 
-//call initialze function here 
+//call initialze function 
 initializePage()
+
+// function to store and display scores; offer to retake quiz
+var endGame = function(){
+    choices.setAttribute("data-state", "hidden");
+    result.setAttribute("data-state", "visible");
+    score.setAttribute("data-state", "visible");
+    timer.setAttribute("data-state", "hidden");
+    var topScore1 = localStorage.getItem("topScore1");
+    var topScore2 = localStorage.getItem("topScore2");
+    var topScore3 = localStorage.getItem("topScore3");
+    var topScores = [topScore1, topScore2, topScore3]
+    var topInitials1 = localStorage.getItem("topInitials1");
+    var topInitials2 = localStorage.getItem("topInitials2");
+    var topInitials3 = localStorage.getItem("topInitials3");
+    var topInitials = [topInitials1, topInitials2, topInitials3]
+
+    // check if current score is within top scores; update top score array
+    if (currentScore > topScores[0]) {
+        localStorage.setItem("topScore1", currentScore)
+        localStorage.setItem("topScore2", topScores[0])
+        localStorage.setItem("topScore3", topScores[1])
+    } else if (currentScore > topScores[1]) {
+        localStorage.setItem("topScore2", currentScore)
+        localStorage.setItem("topScore3", topScores[1])
+    } else if (currentScore > topScores[2]) {
+        localStorage.setItem("topScore3", currentScore)
+    }
+    // store topScore array and initials in local storage
+
+    // get topScores and initials from local storage and display in ol 
+    topScoreslot1.textContent = `${topInitials[0]}: ${localStorage.getItem("topScore1")}`
+    topScoreslot2.textContent = `${topInitials[1]}: ${localStorage.getItem("topScore2")}`
+    topScoreslot3.textContent = `${topInitials[2]}: ${localStorage.getItem("topScore3")}`
+    start.setAttribute("data-state", "visible")
+    question.innerHTML = "Start Again?"
+}
 
 // function to check if correct answer was selected, increment score or decrement time, display message, increment question
 var checkResponse = function(btnClicked){
+    // checks if last question has been answered or time has run out
+    var nextStep = function() { 
+        if (qnumber == questions.length - 1) {
+        choices.replaceChildren()
+        result.innerHTML = ""
+        endGame()
+        } else{
+        choices.replaceChildren()
+        result.innerHTML = ""
+        qnumber++
+        questionGenerator(qnumber)
+        console.log(qnumber);
+        console.log(`Score: ${currentScore}`);
+        }
+    } 
+
     if (btnClicked == qnumber) {
         result.innerHTML = "Correct!";
         currentScore++;
+        nextStep()
     } else {
         result.innerHTML = "Wrong Answer";
         // deduct time from clock
-    }
-    
-    // INSERT IF TO END GAME HERE
-
-    choices.replaceChildren()
-    result.innerHTML = ""
-    qnumber++
-    questionGenerator(qnumber)
-    console.log(qnumber);
-    console.log(`Score: ${currentScore}`);
+        nextStep()
+    }   
 }
+
 
 // selects question by index and displays options
 var questionGenerator = function(qnumber){
@@ -183,7 +236,10 @@ start.addEventListener("click", function(){
     choices.setAttribute("data-state", "visible");
     result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "hidden");
+    timer.setAttribute("data-state", "visible");
     currentScore = 0
     qnumber = 0
+    result.innerHTML = ""
     questionGenerator(qnumber)
+    // add call for interval function
 })
