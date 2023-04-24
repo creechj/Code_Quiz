@@ -20,6 +20,7 @@ var timerSpan = document.querySelector("#timerSpan");
 var topScoreslot1 = document.querySelector("#topScore1");
 var topScoreslot2 = document.querySelector("#topScore2");
 var topScoreslot3 = document.querySelector("#topScore3");
+var initialsForm = document.querySelector("#initialsForm");
 
 var currentScore
 var currentInitials
@@ -108,14 +109,6 @@ var endGame = function(){
     result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "visible");
     timer.setAttribute("data-state", "hidden");
-    initials.setAttribute("data-state", "visible");
-    submit.setAttribute("data-state", "visible");
-
-    // function to capture initials from form - needs adjusted
-    submit.addEventListener("submit", function(event){
-        event.preventDefault()
-        currentInitials = initials.textContent
-    })
 
     var topScore1 = localStorage.getItem("topScore1");
     var topScore2 = localStorage.getItem("topScore2");
@@ -159,16 +152,27 @@ var checkResponse = function(btnClicked){
     var nextStep = function() { 
         // add check against timer to if !!!
         if (qnumber == questions.length - 1) {
-        choices.replaceChildren()
-        result.innerHTML = ""
-        endGame()
+            choices.replaceChildren()
+            result.innerHTML = ""
+            initials.setAttribute("data-state", "visible");
+            submit.setAttribute("data-state", "visible");
+            // function to capture initials from form
+            initialsForm.addEventListener("submit", function(event){
+                event.preventDefault()
+                // this needs passed to endGame function
+                currentInitials = initials.textContent
+                initials.setAttribute("data-state", "hidden");
+                submit.setAttribute("data-state", "hidden");
+                initials.textContent = ""
+                endGame()
+            })
         } else{
-        choices.replaceChildren()
-        result.innerHTML = ""
-        qnumber++
-        questionGenerator(qnumber)
-        console.log(qnumber);
-        console.log(`Score: ${currentScore}`);
+            choices.replaceChildren()
+            result.innerHTML = ""
+            qnumber++
+            questionGenerator(qnumber)
+            console.log(qnumber);
+            console.log(`Score: ${currentScore}`);
         }
     } 
 
