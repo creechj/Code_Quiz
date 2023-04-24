@@ -5,7 +5,7 @@
 // else display message; display next question; deduct extra time
 // once questions == last || timer == zero: display form to add initials w/ score
 // display initials with scores ranked
-// offer repeat - scores must persist
+// offer repeat - scores must persist 
 
 // query selectors for html elements
 var start = document.querySelector("#start");
@@ -108,6 +108,15 @@ var endGame = function(){
     result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "visible");
     timer.setAttribute("data-state", "hidden");
+    initials.setAttribute("data-state", "visible");
+    submit.setAttribute("data-state", "visible");
+
+    // function to capture initials from form - needs adjusted
+    submit.addEventListener("submit", function(event){
+        event.preventDefault()
+        currentInitials = initials.textContent
+    })
+
     var topScore1 = localStorage.getItem("topScore1");
     var topScore2 = localStorage.getItem("topScore2");
     var topScore3 = localStorage.getItem("topScore3");
@@ -120,13 +129,19 @@ var endGame = function(){
     // check if current score is within top scores; update top score array
     if (currentScore > topScores[0]) {
         localStorage.setItem("topScore1", currentScore)
+        localStorage.setItem("topInitials1", currentInitials)
         localStorage.setItem("topScore2", topScores[0])
+        localStorage.setItem("topInitials2", topInitials[0])
         localStorage.setItem("topScore3", topScores[1])
+        localStorage.setItem("topInitials3", topInitials[1])
     } else if (currentScore > topScores[1]) {
         localStorage.setItem("topScore2", currentScore)
+        localStorage.setItem("topInitials2", currentInitials)
         localStorage.setItem("topScore3", topScores[1])
+        localStorage.setItem("topInitials3", topInitials[1])
     } else if (currentScore > topScores[2]) {
         localStorage.setItem("topScore3", currentScore)
+        localStorage.setItem("topInitials3", currentInitials)
     }
 
     // get topScores and initials from local storage and display in ol 
@@ -142,6 +157,7 @@ var endGame = function(){
 var checkResponse = function(btnClicked){
     // checks if last question has been answered or time has run out
     var nextStep = function() { 
+        // add check against timer to if !!!
         if (qnumber == questions.length - 1) {
         choices.replaceChildren()
         result.innerHTML = ""
@@ -206,7 +222,7 @@ var questionGenerator = function(qnumber){
         optionBtn.setAttribute("id", `option${i}`);
     };
 
-    // add event listeners for 4 buttons. compare button id to index of correct answer in answers array via checkResponse function
+    // event listeners for 4 buttons. compare button id to index of correct answer in answers array via checkResponse function
     var option1 = document.getElementById("option0")
     option1.addEventListener("click", function(){
         var btnClicked = answers.indexOf(option1.textContent);
@@ -237,18 +253,28 @@ start.addEventListener("click", function(){
     result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "hidden");
     timer.setAttribute("data-state", "visible");
+    initials.setAttribute("data-state", "hidden");
+    submit.setAttribute("data-state", "hidden");
+
     currentScore = 0
     qnumber = 0
     result.innerHTML = ""
+
+    // initialize scores for comparison on first 3 rounds
     if (localStorage.getItem("topScore1") == null) {
         localStorage.setItem("topScore1", 0)
+        localStorage.setItem("topInitials1", "")
     }
     if (localStorage.getItem("topScore2") == null) {
         localStorage.setItem("topScore2", 0)
+        localStorage.setItem("topInitials2", "")
     }
     if (localStorage.getItem("topScore3") == null) {
         localStorage.setItem("topScore3", 0)
+        localStorage.setItem("topInitials3", "")
     }
+
     questionGenerator(qnumber)
-    // add call for interval function
+
+    // add call for interval function !!!
 })
