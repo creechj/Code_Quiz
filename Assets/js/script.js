@@ -17,14 +17,11 @@ var initials = document.querySelector("#initials");
 var submit = document.querySelector("#submit");
 var timer = document.querySelector("#timer");
 var timerSpan = document.querySelector("#timerSpan");
-var topScoreslot1 = document.querySelector("#topScore1");
-var topScoreslot2 = document.querySelector("#topScore2");
-var topScoreslot3 = document.querySelector("#topScore3");
 var initialsForm = document.querySelector("#initialsForm");
 
-var currentScore
-var currentInitials
-var qnumber
+var currentScore;
+var currentInitials;
+var qnumber;
 
 // array with questions to cycle through
 var questions = [
@@ -101,49 +98,40 @@ var initializePage = function() {
 }
 
 //call initialze function 
-initializePage()
+initializePage();
 
 // function to store and display scores; offer to retake quiz
 var endGame = function(){
+    initials.value = "";
+
+    initials.setAttribute("data-state", "hidden");
+    submit.setAttribute("data-state", "hidden");
     choices.setAttribute("data-state", "hidden");
     result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "visible");
     timer.setAttribute("data-state", "hidden");
 
-    var topScore1 = localStorage.getItem("topScore1");
-    var topScore2 = localStorage.getItem("topScore2");
-    var topScore3 = localStorage.getItem("topScore3");
-    var topScores = [topScore1, topScore2, topScore3]
-    var topInitials1 = localStorage.getItem("topInitials1");
-    var topInitials2 = localStorage.getItem("topInitials2");
-    var topInitials3 = localStorage.getItem("topInitials3");
-    var topInitials = [topInitials1, topInitials2, topInitials3]
+    // retrieves scores from local storage and sorts desc. on score property
+    var topScores = [];
+    topScores = JSON.parse(localStorage.getItem("scores"));
+    console.log(topScores[0].initials, topScores[0].score)
+    console.log(typeof(topScores))
+    function sortScores(a, b) {
+        return parseInt(b.score) - parseInt(a.score);
+    }
+    topScores.sort(sortScores);
+    
+    console.log(topScores)
 
-    // check if current score is within top scores; update top score array
-    if (currentScore > topScores[0]) {
-        localStorage.setItem("topScore1", currentScore)
-        localStorage.setItem("topInitials1", currentInitials)
-        localStorage.setItem("topScore2", topScores[0])
-        localStorage.setItem("topInitials2", topInitials[0])
-        localStorage.setItem("topScore3", topScores[1])
-        localStorage.setItem("topInitials3", topInitials[1])
-    } else if (currentScore > topScores[1]) {
-        localStorage.setItem("topScore2", currentScore)
-        localStorage.setItem("topInitials2", currentInitials)
-        localStorage.setItem("topScore3", topScores[1])
-        localStorage.setItem("topInitials3", topInitials[1])
-    } else if (currentScore > topScores[2]) {
-        localStorage.setItem("topScore3", currentScore)
-        localStorage.setItem("topInitials3", currentInitials)
+    // create li's for each score and display in desc. order 
+    for (i = 0; i < topScores.length; i++){
+        var scoreLi = document.createElement("li");
+        score.appendChild(scoreLi);
+        scoreLi.innerHTML = `${topScores[i].initials} - ${topScores[i].score}`;
     }
 
-    // get topScores and initials from local storage and display in ol 
-    topScoreslot1.textContent = `${topInitials[0]}: ${localStorage.getItem("topScore1")}`
-    topScoreslot2.textContent = `${topInitials[1]}: ${localStorage.getItem("topScore2")}`
-    topScoreslot3.textContent = `${topInitials[2]}: ${localStorage.getItem("topScore3")}`
-
-    start.setAttribute("data-state", "visible")
-    question.innerHTML = "Start Again?"
+    start.setAttribute("data-state", "visible");
+    question.innerHTML = "Start Again?";
 }
 
 // function to check if correct answer was selected, increment score or decrement time, display message, increment question
@@ -152,25 +140,34 @@ var checkResponse = function(btnClicked){
     var nextStep = function() { 
         // add check against timer to if !!!
         if (qnumber == questions.length - 1) {
-            choices.replaceChildren()
-            result.innerHTML = ""
+            choices.replaceChildren();
+            result.innerHTML = "";
+            question.innerHTML = `You answered ${currentScore} questions correclty. Please enter your initials below:`;
             initials.setAttribute("data-state", "visible");
             submit.setAttribute("data-state", "visible");
             // function to capture initials from form
             initialsForm.addEventListener("submit", function(event){
-                event.preventDefault()
-                // this needs passed to endGame function
-                currentInitials = initials.textContent
-                initials.setAttribute("data-state", "hidden");
-                submit.setAttribute("data-state", "hidden");
-                initials.textContent = ""
-                endGame()
+                event.preventDefault();
+                currentInitials = initials.value;
+                // object to push initials & score to scores array for localstorage
+                if (localStorage.getItem("scores") == null) {
+                    var scores = [];
+                } else {
+                    scores = JSON.parse(localStorage.getItem("scores"));
+                };
+                let newUser = {
+                    "initials": currentInitials,
+                    "score": currentScore
+                };
+                scores.push(newUser);
+                localStorage.setItem("scores", JSON.stringify(scores));
+                endGame();
             })
         } else{
             choices.replaceChildren()
-            result.innerHTML = ""
-            qnumber++
-            questionGenerator(qnumber)
+            result.innerHTML = "";
+            qnumber++;
+            questionGenerator(qnumber);
             console.log(qnumber);
             console.log(`Score: ${currentScore}`);
         }
@@ -179,11 +176,11 @@ var checkResponse = function(btnClicked){
     if (btnClicked == qnumber) {
         result.innerHTML = "Correct!";
         currentScore++;
-        nextStep()
+        nextStep();
     } else {
         result.innerHTML = "Wrong Answer";
         // deduct time from clock
-        nextStep()
+        nextStep();
     }   
 }
 
@@ -195,9 +192,9 @@ var questionGenerator = function(qnumber){
     question.textContent = questions[qnumber];
 
     // randomly assigns false answers to variables; reruns if selections match
-    var falseAnswer1
-    var falseAnswer2
-    var falseAnswer3
+    var falseAnswer1;
+    var falseAnswer2;
+    var falseAnswer3;
 
     var falseChooser = function(){
         falseAnswer1 = falseAnswers[Math.floor(Math.random()*falseAnswers.length)];
@@ -207,7 +204,7 @@ var questionGenerator = function(qnumber){
             falseChooser();
         };
     }
-    falseChooser()
+    falseChooser();
 
     // array with stored answers for assignment to li's as options
     var randAnswers = [answers[qnumber], falseAnswer1, falseAnswer2, falseAnswer3];
@@ -260,25 +257,11 @@ start.addEventListener("click", function(){
     initials.setAttribute("data-state", "hidden");
     submit.setAttribute("data-state", "hidden");
 
-    currentScore = 0
-    qnumber = 0
-    result.innerHTML = ""
+    currentScore = 0;
+    qnumber = 0;
+    result.innerHTML = "";
 
-    // initialize scores for comparison on first 3 rounds
-    if (localStorage.getItem("topScore1") == null) {
-        localStorage.setItem("topScore1", 0)
-        localStorage.setItem("topInitials1", "")
-    }
-    if (localStorage.getItem("topScore2") == null) {
-        localStorage.setItem("topScore2", 0)
-        localStorage.setItem("topInitials2", "")
-    }
-    if (localStorage.getItem("topScore3") == null) {
-        localStorage.setItem("topScore3", 0)
-        localStorage.setItem("topInitials3", "")
-    }
-
-    questionGenerator(qnumber)
+    questionGenerator(qnumber);
 
     // add call for interval function !!!
 })
