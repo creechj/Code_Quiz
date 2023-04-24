@@ -100,6 +100,8 @@ var initializePage = function() {
 //call initialze function 
 initializePage();
 
+// create interval timer function here !!!
+
 // function to store and display scores; offer to retake quiz
 var endGame = function(){
     initials.value = "";
@@ -146,30 +148,31 @@ var checkResponse = function(btnClicked){
             initials.setAttribute("data-state", "visible");
             submit.setAttribute("data-state", "visible");
             // function to capture initials from form
-            initialsForm.addEventListener("submit", function(event){
+            var submitScore = function(event) {
                 event.preventDefault();
                 currentInitials = initials.value;
                 // object to push initials & score to scores array for localstorage
-                if (localStorage.getItem("scores") == null) {
+                scores = JSON.parse(localStorage.getItem("scores"));
+                if (JSON.parse(localStorage.getItem("scores")) == null) {
                     var scores = [];
-                } else {
-                    scores = JSON.parse(localStorage.getItem("scores"));
                 };
-                let newUser = {
+                console.log(scores)
+                var newUser = {
                     "initials": currentInitials,
                     "score": currentScore
                 };
                 scores.push(newUser);
+                console.log(scores)
                 localStorage.setItem("scores", JSON.stringify(scores));
+                initialsForm.removeEventListener("submit", submitScore)
                 endGame();
-            })
+            }
+            initialsForm.addEventListener("submit", submitScore)
         } else{
             choices.replaceChildren()
             result.innerHTML = "";
             qnumber++;
             questionGenerator(qnumber);
-            console.log(qnumber);
-            console.log(`Score: ${currentScore}`);
         }
     } 
 
@@ -247,7 +250,7 @@ var questionGenerator = function(qnumber){
 };
 
 // event listener for start button - hides/reveals quiz elements; resets score and question number
-start.addEventListener("click", function(){
+var startFunction = function(){
     start.setAttribute("data-state", "hidden");
     question.setAttribute("data-state", "visible");
     choices.setAttribute("data-state", "visible");
@@ -260,8 +263,10 @@ start.addEventListener("click", function(){
     currentScore = 0;
     qnumber = 0;
     result.innerHTML = "";
-
+    score.replaceChildren();
+    start.removeEventListener("click", startFunction)
     questionGenerator(qnumber);
 
     // add call for interval function !!!
-})
+};
+start.addEventListener("click", startFunction);
