@@ -109,17 +109,14 @@ var fnctTimer  = function() {
         timer.innerHTML = `Time: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000)}`;
         console.log(quizTime);
     } else {
-        clearInterval(timerOn)
+        clearInterval(timerOn);
     }
 }
-
-
 
 // function to store and display scores; offer to retake quiz
 var endGame = function(){
     initials.value = "";
     
-
     initials.setAttribute("data-state", "hidden");
     submit.setAttribute("data-state", "hidden");
     choices.setAttribute("data-state", "hidden");
@@ -130,14 +127,10 @@ var endGame = function(){
     // retrieves scores from local storage and sorts desc. on score property
     var topScores = [];
     topScores = JSON.parse(localStorage.getItem("scores"));
-    console.log(topScores[0].initials, topScores[0].score)
-    console.log(typeof(topScores))
     function sortScores(a, b) {
         return parseInt(b.score) - parseInt(a.score);
     }
     topScores.sort(sortScores);
-    
-    console.log(topScores)
 
     // create li's for each score and display in desc. order 
     for (i = 0; i < topScores.length; i++){
@@ -145,18 +138,17 @@ var endGame = function(){
         score.appendChild(scoreLi);
         scoreLi.innerHTML = `${topScores[i].initials} - ${topScores[i].score}`;
     }
-
+    console.log(quizTime)
     start.setAttribute("data-state", "visible");
     question.innerHTML = "Start Again?";
+    start.addEventListener("click", startFunction);
 }
 
 // function to check if correct answer was selected, increment score or decrement time, display message, increment question
 var checkResponse = function(btnClicked){
     // checks if last question has been answered or time has run out
     var nextStep = function() { 
-        // add check against timer to if !!!
         if (qnumber == questions.length - 1 || quizTime == 0) {
-            clearInterval()
             choices.replaceChildren();
             result.innerHTML = "";
             question.innerHTML = `You answered ${currentScore} questions correclty. Please enter your initials below:`;
@@ -171,15 +163,13 @@ var checkResponse = function(btnClicked){
                 if (JSON.parse(localStorage.getItem("scores")) == null) {
                     var scores = [];
                 };
-                console.log(scores)
                 var newUser = {
                     "initials": currentInitials,
                     "score": currentScore
                 };
                 scores.push(newUser);
-                console.log(scores)
                 localStorage.setItem("scores", JSON.stringify(scores));
-                initialsForm.removeEventListener("submit", submitScore)
+                initialsForm.removeEventListener("submit", submitScore);
                 endGame();
             }
             initialsForm.addEventListener("submit", submitScore)
@@ -197,7 +187,7 @@ var checkResponse = function(btnClicked){
         nextStep();
     } else {
         result.innerHTML = "Wrong Answer";
-        // deduct time from clock
+        // deduct time from clock !!!
         nextStep();
     }   
 }
@@ -205,7 +195,6 @@ var checkResponse = function(btnClicked){
 
 // selects question by index and displays options
 var questionGenerator = function(qnumber){
-    
     // selects and displays question by number
     question.textContent = questions[qnumber];
 
@@ -280,9 +269,8 @@ var startFunction = function(){
     result.innerHTML = "";
     score.replaceChildren();
     start.removeEventListener("click", startFunction)
-    questionGenerator(qnumber);
-    // attach countdown function to setInterval function
     quizTime = 10000
-    var timerOn = setInterval(fnctTimer, 1000);
+    timerOn = setInterval(fnctTimer, 1000);
+    questionGenerator(qnumber);
 };
 start.addEventListener("click", startFunction);
