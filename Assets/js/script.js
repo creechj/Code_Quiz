@@ -100,11 +100,25 @@ var initializePage = function() {
 //call initialze function 
 initializePage();
 
-// create interval timer function here !!!
+// function to display countdown
+var timerOn
+var quizTime
+var fnctTimer  = function() {
+    if (quizTime > 0) {
+        quizTime = quizTime - 1000;
+        timer.innerHTML = `Time: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000)}`;
+        console.log(quizTime);
+    } else {
+        clearInterval(timerOn)
+    }
+}
+
+
 
 // function to store and display scores; offer to retake quiz
 var endGame = function(){
     initials.value = "";
+    
 
     initials.setAttribute("data-state", "hidden");
     submit.setAttribute("data-state", "hidden");
@@ -141,7 +155,8 @@ var checkResponse = function(btnClicked){
     // checks if last question has been answered or time has run out
     var nextStep = function() { 
         // add check against timer to if !!!
-        if (qnumber == questions.length - 1) {
+        if (qnumber == questions.length - 1 || quizTime == 0) {
+            clearInterval()
             choices.replaceChildren();
             result.innerHTML = "";
             question.innerHTML = `You answered ${currentScore} questions correclty. Please enter your initials below:`;
@@ -266,7 +281,8 @@ var startFunction = function(){
     score.replaceChildren();
     start.removeEventListener("click", startFunction)
     questionGenerator(qnumber);
-
-    // add call for interval function !!!
+    // attach countdown function to setInterval function
+    quizTime = 10000
+    var timerOn = setInterval(fnctTimer, 1000);
 };
 start.addEventListener("click", startFunction);

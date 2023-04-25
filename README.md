@@ -12,3 +12,9 @@ https://www.freecodecamp.org/news/javascript-array-of-objects-tutorial-how-to-cr
 
 parseInt used within array sort:
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+
+setInterval:
+https://developer.mozilla.org/en-US/docs/Web/API/setInterval
+
+timer appearance:
+https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
