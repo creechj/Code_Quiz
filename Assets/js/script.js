@@ -25,7 +25,7 @@ var qnumber;
 
 // array with questions to cycle through
 var questions = [
-    "Question1",
+    "EXXXXtttttrrrrrraaaaaa lllooooonnnnngggggg sample question!!!!!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!",
     "Question2",
     "Question3",
     "Question4",
@@ -88,14 +88,17 @@ var falseAnswers = [
 // sets load state of page
 var initializePage = function() {
     start.setAttribute("data-state", "visible");
-    question.setAttribute("data-state", "hidden");
+    question.setAttribute("data-state", "visible");
     choices.setAttribute("data-state", "hidden");
-    result.setAttribute("data-state", "hidden");
+    result.setAttribute("data-state", "visible");
     score.setAttribute("data-state", "visible");
     initials.setAttribute("data-state", "hidden");
     submit.setAttribute("data-state", "hidden");
     timer.setAttribute("data-state", "hidden");
 }
+
+question.innerHTML = "Coding Quiz"
+result.innerHTML = "You will have 10 minutes to select the best answer for 20 questions. The time remaining is displayed in the upper-right. Click Start to begin."
 
 //call initialze function 
 initializePage();

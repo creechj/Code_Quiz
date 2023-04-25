@@ -1,5 +1,30 @@
-* {
-    align-items: center;
+body {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+}
+
+#timer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 20px;
+}
+
+#question {
+    font-size: 1.25em;
+    width: 80%;
+    /* word-wrap: break-word; */
+    word-break: keep-all;
+}
+
+button {
+    width: 150px;
+}
+
+#start {
+    width: 75px;
+    margin: 10px;
 }
 
 [data-state="hidden"] {
