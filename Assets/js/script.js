@@ -180,9 +180,9 @@ var checkResponse = function(btnClicked){
             initialsForm.addEventListener("submit", submitScore)
         } else{
             choices.replaceChildren()
-            result.innerHTML = "";
             qnumber++;
             questionGenerator(qnumber);
+            setTimeout(() => {result.innerHTML = "";}, 1000)
         }
     } 
 
