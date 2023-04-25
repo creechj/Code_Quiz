@@ -1,0 +1,11 @@
+* {
+    align-items: center;
+}
+
+[data-state="hidden"] {
+    visibility: hidden;
+}
+
+[data-state="visible"] {
+    visibility: visible;
+}

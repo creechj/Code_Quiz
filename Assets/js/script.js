@@ -141,6 +141,7 @@ var endGame = function(){
     console.log(quizTime)
     start.setAttribute("data-state", "visible");
     question.innerHTML = "Start Again?";
+    result.innerHTML = "Score History:";
     start.addEventListener("click", startFunction);
 }
 
