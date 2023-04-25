@@ -98,7 +98,7 @@ var initializePage = function() {
 }
 
 question.innerHTML = "Coding Quiz"
-result.innerHTML = "You will have 10 minutes to select the best answer for 20 questions. The time remaining is displayed in the upper-right. Click Start to begin."
+result.innerHTML = "You will have 10 minutes to select the best answer for 20 questions. Time will be deducted for each wrong answer. The time remaining is displayed in the upper-right. Click Start to begin."
 
 //call initialze function 
 initializePage();
@@ -109,10 +109,11 @@ var quizTime
 var fnctTimer  = function() {
     if (quizTime > 0) {
         quizTime = quizTime - 1000;
-        timer.innerHTML = `Time: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000)}`;
+        timer.innerHTML = `Time Remaining: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000)}`;
         console.log(quizTime);
     } else {
         clearInterval(timerOn);
+        checkResponse();
     }
 }
 
@@ -188,10 +189,14 @@ var checkResponse = function(btnClicked){
     if (btnClicked == qnumber) {
         result.innerHTML = "Correct!";
         currentScore++;
+        console.log(result.innerHTML)
         nextStep();
     } else {
         result.innerHTML = "Wrong Answer";
-        // deduct time from clock !!!
+        if (quizTime > 1000) {
+            quizTime = quizTime - 1000
+        }
+        console.log(result.innerHTML)
         nextStep();
     }   
 }

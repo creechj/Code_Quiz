@@ -9,6 +9,7 @@ body {
     top: 0;
     right: 0;
     margin: 20px;
+    color:crimson;
 }
 
 #question {
@@ -20,6 +21,10 @@ body {
 
 button {
     width: 150px;
+    margin: 1px;
+    background-color: darkcyan;
+    color:blanchedalmond;
+    border: .25px solid blanchedalmond;
 }
 
 #start {
