@@ -96,7 +96,7 @@ var fnctTimer  = function() {
         timer.innerHTML = `Time Remaining: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000) % 60}`;
         console.log(quizTime);
     } else {
-        clearInterval(timerOn);
+        // clearInterval(timerOn);
         checkResponse();
     }
 }
@@ -138,6 +138,7 @@ var checkResponse = function(btnClicked){
     // checks if last question has been answered or time has run out
     var nextStep = function() { 
         if (qnumber == questions.length - 1 || quizTime == 0) {
+            clearInterval(timerOn);
             choices.replaceChildren();
             result.innerHTML = "";
             question.innerHTML = `You answered ${currentScore} questions correctly. Please enter your initials below:`;
