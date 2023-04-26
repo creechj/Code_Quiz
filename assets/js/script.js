@@ -25,64 +25,48 @@ var qnumber;
 
 // array with questions to cycle through
 var questions = [
-    "EXXXXtttttrrrrrraaaaaa lllooooonnnnngggggg sample question!!!!!!!!!!!!!!!!!!!!!!!!! !!!!!!!!!!!!!!!!!",
-    "Question2",
-    "Question3",
-    "Question4",
-    "Question5",
-    "Question6",
-    "Question7",
-    "Question8",
-    "Question9",
-    "Question10",
-    "Question11",
-    "Question12",
-    "Question13",
-    "Question14",
-    "Question15",
-    "Question16",
-    "Question17",
-    "Question18",
-    "Question19",
-    "Question20",
+    "In JavaScript, what separator should be used between For Loop parameters?",
+    "Which operator returns the remainder of a division equation?",
+    "What symbol is used to reference an HTML id attribute?",
+    "What comparison do these characters represent || ?",
+    "What character can be used to generate a basic HTML framework using Emmet?",
+    "What characters should surround CSS properties?",
+    "What abbreviation for text size is equal to 1 M for the current font?",
+    "What event should be 'listened' for from a form?",
+    "If used in an HTML document, what tag should JavaScript code be incapsulated in?",
+    "Which of the following can be used to declare a variable?"
 ];
 
 // array with correct answers to corresponding questions
 var answers = [
-    "AnswertoQ1",
-    "AnswertoQ2",
-    "AnswertoQ3",
-    "AnswertoQ4",
-    "AnswertoQ5",
-    "AnswertoQ6",
-    "AnswertoQ7",
-    "AnswertoQ8",
-    "AnswertoQ9",
-    "AnswertoQ10",
-    "AnswertoQ11",
-    "AnswertoQ12",
-    "AnswertoQ13",
-    "AnswertoQ14",
-    "AnswertoQ15",
-    "AnswertoQ16",
-    "AnswertoQ17",
-    "AnswertoQ18",
-    "AnswertoQ19",
-    "AnswertoQ20",
+    "Semicolon",
+    "%",
+    "Hashtag",
+    "or",
+    "Exclamation Point",
+    "Curly Brackets",
+    "em",
+    "submit",
+    "script",
+    "var"
 ];
 
 // array with filler answers
 var falseAnswers = [
-    "FalseAnswer1",
-    "FalseAnswer2",
-    "FalseAnswer3",
-    "FalseAnswer4",
-    "FalseAnswer5",
-    "FalseAnswer6",
-    "FalseAnswer7",
-    "FalseAnswer8",
-    "FalseAnswer9",
-    "FalseAnswer10",
+    "Comma",
+    "Dash",
+    "Underscore",
+    "Boolean",
+    "Network",
+    "jQuery",
+    "JSON",
+    "Period",
+    "Concatenate",
+    "Delete",
+    "GitHub",
+    "XML",
+    "hoisting",
+    "falsey"
 ];
 
 // sets load state of page
@@ -98,7 +82,7 @@ var initializePage = function() {
 }
 
 question.innerHTML = "Coding Quiz"
-result.innerHTML = "You will have 10 minutes to select the best answer for 20 questions. The time remaining is displayed in the upper-right. Click Start to begin."
+result.innerHTML = "You will have 5 minutes to select the best answer for 10 questions. 5 seconds will be deducted for each wrong answer. The time remaining is displayed in the upper-right. Click Start to begin."
 
 //call initialze function 
 initializePage();
@@ -109,10 +93,11 @@ var quizTime
 var fnctTimer  = function() {
     if (quizTime > 0) {
         quizTime = quizTime - 1000;
-        timer.innerHTML = `Time: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000)}`;
+        timer.innerHTML = `Time Remaining: ${Math.floor(quizTime/1000/60)}:${Math.floor(quizTime/1000) % 60}`;
         console.log(quizTime);
     } else {
         clearInterval(timerOn);
+        checkResponse();
     }
 }
 
@@ -155,7 +140,7 @@ var checkResponse = function(btnClicked){
         if (qnumber == questions.length - 1 || quizTime == 0) {
             choices.replaceChildren();
             result.innerHTML = "";
-            question.innerHTML = `You answered ${currentScore} questions correclty. Please enter your initials below:`;
+            question.innerHTML = `You answered ${currentScore} questions correctly. Please enter your initials below:`;
             initials.setAttribute("data-state", "visible");
             submit.setAttribute("data-state", "visible");
             // function to capture initials from form
@@ -168,7 +153,7 @@ var checkResponse = function(btnClicked){
                     var scores = [];
                 };
                 var newUser = {
-                    "initials": currentInitials,
+                    "initials": currentInitials.toUpperCase(),
                     "score": currentScore
                 };
                 scores.push(newUser);
@@ -179,19 +164,23 @@ var checkResponse = function(btnClicked){
             initialsForm.addEventListener("submit", submitScore)
         } else{
             choices.replaceChildren()
-            result.innerHTML = "";
             qnumber++;
             questionGenerator(qnumber);
+            setTimeout(() => {result.innerHTML = "";}, 1000)
         }
     } 
 
     if (btnClicked == qnumber) {
         result.innerHTML = "Correct!";
         currentScore++;
+        console.log(result.innerHTML)
         nextStep();
     } else {
         result.innerHTML = "Wrong Answer";
-        // deduct time from clock !!!
+        if (quizTime > 5000) {
+            quizTime = quizTime - 5000
+        }
+        console.log(result.innerHTML)
         nextStep();
     }   
 }
@@ -273,7 +262,7 @@ var startFunction = function(){
     result.innerHTML = "";
     score.replaceChildren();
     start.removeEventListener("click", startFunction)
-    quizTime = 10000
+    quizTime = 300000
     timerOn = setInterval(fnctTimer, 1000);
     questionGenerator(qnumber);
 };
